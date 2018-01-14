@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CalECRModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="EmployeeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UniqueEmployeeId" Type="char" MaxLength="11" Nullable="false" />
+          <Property Name="TINEncrypted" Type="varbinary" MaxLength="256" />
+          <Property Name="TINHash" Type="nvarchar" MaxLength="40" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="MiddleName" Type="varchar" MaxLength="50" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NameSuffixId" Type="smallint" />
+          <Property Name="GenderId" Type="tinyint" Nullable="false" />
+          <Property Name="DateOfBirth" Type="date" Nullable="false" />
+          <Property Name="RecordStatusId" Type="tinyint" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmployeeEmail">
+          <Key>
+            <PropertyRef Name="EmployeeEmailId" />
+          </Key>
+          <Property Name="EmployeeEmailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeId" Type="int" Nullable="false" />
+          <Property Name="EmailTypeId" Type="tinyint" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RecordStatusId" Type="tinyint" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmployeePhone">
+          <Key>
+            <PropertyRef Name="EmployeePhoneId" />
+          </Key>
+          <Property Name="EmployeePhoneId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeId" Type="int" Nullable="false" />
+          <Property Name="PhoneTypeId" Type="smallint" Nullable="false" />
+          <Property Name="CountryCode" Type="char" MaxLength="4" />
+          <Property Name="Number" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Extension" Type="varchar" MaxLength="5" />
+          <Property Name="RecordStatusId" Type="tinyint" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vEmployeeInfo">
+          <Key>
+            <PropertyRef Name="UniqueEmployeeId" />
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+          </Key>
+          <Property Name="UniqueEmployeeId" Type="char" MaxLength="11" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="100" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="MiddleName" Type="varchar" MaxLength="50" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Suffix" Type="varchar" MaxLength="20" />
+          <Property Name="Tenure" Type="varchar" MaxLength="27" />
+          <Property Name="Timebase" Type="varchar" MaxLength="15" />
+          <Property Name="TenureTimebaseId" Type="tinyint" />
+          <Property Name="AgencyCode" Type="char" MaxLength="3" />
+        </EntityType>
+        <Association Name="fk_EmployeeEmail_EmployeeId">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="EmployeeEmail" Type="Self.EmployeeEmail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="EmployeeEmail">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_EmployeePhone_EmployeeId">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="EmployeePhone" Type="Self.EmployeePhone" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="EmployeePhone">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CalECRModelStoreContainer">
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeEmail" EntityType="Self.EmployeeEmail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeePhone" EntityType="Self.EmployeePhone" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vEmployeeInfo" EntityType="Self.vEmployeeInfo" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vEmployeeInfo].[UniqueEmployeeId] AS [UniqueEmployeeId], 
+    [vEmployeeInfo].[Email] AS [Email], 
+    [vEmployeeInfo].[FirstName] AS [FirstName], 
+    [vEmployeeInfo].[MiddleName] AS [MiddleName], 
+    [vEmployeeInfo].[LastName] AS [LastName], 
+    [vEmployeeInfo].[Suffix] AS [Suffix], 
+    [vEmployeeInfo].[Tenure] AS [Tenure], 
+    [vEmployeeInfo].[Timebase] AS [Timebase], 
+    [vEmployeeInfo].[TenureTimebaseId] AS [TenureTimebaseId], 
+    [vEmployeeInfo].[AgencyCode] AS [AgencyCode]
+    FROM [dbo].[vEmployeeInfo] AS [vEmployeeInfo]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="fk_EmployeeEmail_EmployeeId" Association="Self.fk_EmployeeEmail_EmployeeId">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="EmployeeEmail" EntitySet="EmployeeEmail" />
+          </AssociationSet>
+          <AssociationSet Name="fk_EmployeePhone_EmployeeId" Association="Self.fk_EmployeePhone_EmployeeId">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="EmployeePhone" EntitySet="EmployeePhone" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CalECRModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UniqueEmployeeId" Type="String" MaxLength="11" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="TINEncrypted" Type="Binary" MaxLength="256" FixedLength="false" />
+          <Property Name="TINHash" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NameSuffixId" Type="Int16" />
+          <Property Name="GenderId" Type="Byte" Nullable="false" />
+          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="RecordStatusId" Type="Byte" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="EmployeeEmail" Relationship="Self.fk_EmployeeEmail_EmployeeId" FromRole="Employee" ToRole="EmployeeEmail" />
+          <NavigationProperty Name="EmployeePhone" Relationship="Self.fk_EmployeePhone_EmployeeId" FromRole="Employee" ToRole="EmployeePhone" />
+        </EntityType>
+        <EntityType Name="EmployeeEmail">
+          <Key>
+            <PropertyRef Name="EmployeeEmailId" />
+          </Key>
+          <Property Name="EmployeeEmailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+          <Property Name="EmailTypeId" Type="Byte" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RecordStatusId" Type="Byte" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Employee" Relationship="Self.fk_EmployeeEmail_EmployeeId" FromRole="EmployeeEmail" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="EmployeePhone">
+          <Key>
+            <PropertyRef Name="EmployeePhoneId" />
+          </Key>
+          <Property Name="EmployeePhoneId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+          <Property Name="PhoneTypeId" Type="Int16" Nullable="false" />
+          <Property Name="CountryCode" Type="String" MaxLength="4" FixedLength="true" Unicode="false" />
+          <Property Name="Number" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Extension" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="RecordStatusId" Type="Byte" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Employee" Relationship="Self.fk_EmployeePhone_EmployeeId" FromRole="EmployeePhone" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="vEmployeeInfo">
+          <Key>
+            <PropertyRef Name="UniqueEmployeeId" />
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+          </Key>
+          <Property Name="UniqueEmployeeId" Type="String" MaxLength="11" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Suffix" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Tenure" Type="String" MaxLength="27" FixedLength="false" Unicode="false" />
+          <Property Name="Timebase" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TenureTimebaseId" Type="Byte" />
+          <Property Name="AgencyCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <Association Name="fk_EmployeeEmail_EmployeeId">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="EmployeeEmail" Type="Self.EmployeeEmail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="EmployeeEmail">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_EmployeePhone_EmployeeId">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="EmployeePhone" Type="Self.EmployeePhone" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="EmployeePhone">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CalECREntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Employee" EntityType="Self.Employee" />
+          <EntitySet Name="EmployeeEmail" EntityType="Self.EmployeeEmail" />
+          <EntitySet Name="EmployeePhone" EntityType="Self.EmployeePhone" />
+          <EntitySet Name="vEmployeeInfo" EntityType="Self.vEmployeeInfo" />
+          <AssociationSet Name="fk_EmployeeEmail_EmployeeId" Association="Self.fk_EmployeeEmail_EmployeeId">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="EmployeeEmail" EntitySet="EmployeeEmail" />
+          </AssociationSet>
+          <AssociationSet Name="fk_EmployeePhone_EmployeeId" Association="Self.fk_EmployeePhone_EmployeeId">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="EmployeePhone" EntitySet="EmployeePhone" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CalECRModelStoreContainer" CdmEntityContainer="CalECREntities1">
+          <EntitySetMapping Name="Employee">
+            <EntityTypeMapping TypeName="CalECRModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="UniqueEmployeeId" ColumnName="UniqueEmployeeId" />
+                <ScalarProperty Name="TINEncrypted" ColumnName="TINEncrypted" />
+                <ScalarProperty Name="TINHash" ColumnName="TINHash" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="NameSuffixId" ColumnName="NameSuffixId" />
+                <ScalarProperty Name="GenderId" ColumnName="GenderId" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="RecordStatusId" ColumnName="RecordStatusId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeEmail">
+            <EntityTypeMapping TypeName="CalECRModel.EmployeeEmail">
+              <MappingFragment StoreEntitySet="EmployeeEmail">
+                <ScalarProperty Name="EmployeeEmailId" ColumnName="EmployeeEmailId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="EmailTypeId" ColumnName="EmailTypeId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="RecordStatusId" ColumnName="RecordStatusId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeePhone">
+            <EntityTypeMapping TypeName="CalECRModel.EmployeePhone">
+              <MappingFragment StoreEntitySet="EmployeePhone">
+                <ScalarProperty Name="EmployeePhoneId" ColumnName="EmployeePhoneId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="PhoneTypeId" ColumnName="PhoneTypeId" />
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="RecordStatusId" ColumnName="RecordStatusId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vEmployeeInfo">
+            <EntityTypeMapping TypeName="CalECRModel.vEmployeeInfo">
+              <MappingFragment StoreEntitySet="vEmployeeInfo">
+                <ScalarProperty Name="UniqueEmployeeId" ColumnName="UniqueEmployeeId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Suffix" ColumnName="Suffix" />
+                <ScalarProperty Name="Tenure" ColumnName="Tenure" />
+                <ScalarProperty Name="Timebase" ColumnName="Timebase" />
+                <ScalarProperty Name="TenureTimebaseId" ColumnName="TenureTimebaseId" />
+                <ScalarProperty Name="AgencyCode" ColumnName="AgencyCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
