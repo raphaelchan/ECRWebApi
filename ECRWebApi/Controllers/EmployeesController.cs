@@ -19,12 +19,14 @@ namespace ECRWebApi.Controllers
         private readonly byte HOMEPHONETYPE = 1;
         private readonly byte WORKEMAILTYPE = 2;
         private readonly byte WORKPHONETYPE = 2;
-        
+
 
         // GET: api/Employees
         /// <summary>
         /// Get ECR Employee data by an AgencyCode
         /// </summary>
+        /// <response code="200">Success</response>
+        /// <response code="204">No Matching Employees</response>
         /// <param name="AgencyCode"></param>
         /// <returns></returns>
         public IQueryable<vEmployeeInfo> GetvEmployeeInfo(string AgencyCode)
@@ -35,75 +37,21 @@ namespace ECRWebApi.Controllers
         }
 
         /// <summary>
-        /// Update Employee phones and email
+        /// Update ECR Phone/Email Batch File
         /// </summary>
-        /// <param name="UEID"></param>
+        /// <response code="200">Success</response>
+        /// <response code="207">Partial Updated</response>
         /// <returns></returns>
-        public IHttpActionResult PutContacts(string ueid, Contacts contacts)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-            var er = db.Employee
-                .Where(t => t.UniqueEmployeeId.Equals(ueid)).FirstOrDefault();
-
-            if (er == null)
-            {
-                return NotFound();
-            }
-
-            if (contacts.Email != null)
-            {
-                UpdateEmail(er.EmployeeId, contacts.Email, WORKEMAILTYPE);
-            }
-
-            if (contacts.HomePhone != null)
-            { 
-                UpdatePhone(er.EmployeeId, contacts.HomePhone, HOMEPHONETYPE);
-            }
-
-            if (contacts.WorkPhone != null)
-            {
-                UpdatePhone(er.EmployeeId, contacts.WorkPhone, WORKPHONETYPE);
-            }
-
-            //db.Entry(contacts).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                //if (!EmployeeEmailExists(id))
-                //{
-                //    return NotFound();
-                //}
-                //else
-                //{
-                //    throw;
-                //}
-            }
-
-
-            return Ok();
-        }
-
-        /// <summary>
-        /// Bulk Employee emails & phones update
-        /// </summary>
-        /// <returns></returns>
-        // POST: api/EmployeeContacts
-        [ResponseType(typeof(EmployeesContacts))]
         public IHttpActionResult PostEmployeesContacts(EmployeesContacts employeesInfo)
         {
             int responseCode = 200;
             string responseBody = "";
             int noMatch = 0;
+            int updateFail = 0;
             int totalCnt = 0;
             string euidNotMatch = "";
+            string euidSaveFail = "";
 
             if (!ModelState.IsValid)
             {
@@ -135,12 +83,23 @@ namespace ECRWebApi.Controllers
                     {
                         UpdatePhone(er.EmployeeId, item.WorkPhone, WORKPHONETYPE);
                     }
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        updateFail++;
+                        euidSaveFail = euidSaveFail + item.Ueid + ",";
+                    }
                 }
             }
-            if (noMatch > 0)
+            if (noMatch > 0 || updateFail > 0)
             {
                 responseCode = 207;
-                responseBody = (totalCnt - noMatch) + " UEID updated. " + noMatch + " UEID not match:" + euidNotMatch.TrimEnd(',') + ".";
+                responseBody = "Total " + (totalCnt - noMatch - updateFail) + " UEIDs updated. "
+                    + noMatch + " Invalid UEIDs:" + euidNotMatch.TrimEnd(',') + "."
+                    + updateFail + " UEIDs failed to update due to DB error:" + euidSaveFail.TrimEnd(',') + ".";
             }
             else
             {
@@ -152,12 +111,74 @@ namespace ECRWebApi.Controllers
                             (HttpStatusCode)responseCode,
                             new HttpError(responseBody)
                         )
-);
+                );
             //db.EmployeeEmail.Add(employeeEmail);
             //db.SaveChanges();
 
             //return CreatedAtRoute("DefaultApi", new { id = employeeEmail.EmployeeEmailId }, employeeEmail);
         }
+        /// <summary>
+        /// Update Employee phones and email
+        /// </summary>
+        /// <response code="200">Success</response>
+        /// <response code="404">Invalid UEID</response>
+        /// <response code="500">Database Error</response>
+        /// <param name="UEID"></param>
+        /// <returns></returns>
+        public IHttpActionResult PutContacts(string ueid, Contacts contacts)
+        {
+            int responseCode = 200;
+            string responseBody = "";
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var er = db.Employee
+                .Where(t => t.UniqueEmployeeId.Equals(ueid)).FirstOrDefault();
+
+            if (er == null)
+            {
+                responseCode = 404;
+                responseBody = "Invalid UEID";
+            }
+            else
+            {
+                if (contacts.Email != null)
+                {
+                    UpdateEmail(er.EmployeeId, contacts.Email, WORKEMAILTYPE);
+                }
+
+                if (contacts.HomePhone != null)
+                {
+                    UpdatePhone(er.EmployeeId, contacts.HomePhone, HOMEPHONETYPE);
+                }
+
+                if (contacts.WorkPhone != null)
+                {
+                    UpdatePhone(er.EmployeeId, contacts.WorkPhone, WORKPHONETYPE);
+                }
+
+                //db.Entry(contacts).State = EntityState.Modified;
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    responseCode = 500;
+                    responseBody = "Unable to save changes";
+                }
+            }
+            return new System.Web.Http.Results.ResponseMessageResult(
+            Request.CreateErrorResponse(
+                (HttpStatusCode)responseCode,
+                new HttpError(responseBody)
+                        )
+                );
+        }
+
         private void UpdatePhone(int employeeId, string phoneNum, byte phoneType)
         {
             var phonerec = db.EmployeePhone
