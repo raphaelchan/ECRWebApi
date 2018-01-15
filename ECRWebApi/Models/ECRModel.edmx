@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CalECRModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="CalECRModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Employee">
           <Key>
             <PropertyRef Name="EmployeeId" />
@@ -60,10 +60,9 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
           <Property Name="MiddleName" Type="varchar" MaxLength="50" />
           <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Suffix" Type="varchar" MaxLength="20" />
+          <Property Name="AgencyCode" Type="char" MaxLength="3" />
           <Property Name="Tenure" Type="varchar" MaxLength="27" />
           <Property Name="Timebase" Type="varchar" MaxLength="15" />
-          <Property Name="TenureTimebaseId" Type="tinyint" />
-          <Property Name="AgencyCode" Type="char" MaxLength="3" />
         </EntityType>
         <Association Name="fk_EmployeeEmail_EmployeeId">
           <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
@@ -101,10 +100,9 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
     [vEmployeeInfo].[MiddleName] AS [MiddleName], 
     [vEmployeeInfo].[LastName] AS [LastName], 
     [vEmployeeInfo].[Suffix] AS [Suffix], 
+    [vEmployeeInfo].[AgencyCode] AS [AgencyCode], 
     [vEmployeeInfo].[Tenure] AS [Tenure], 
-    [vEmployeeInfo].[Timebase] AS [Timebase], 
-    [vEmployeeInfo].[TenureTimebaseId] AS [TenureTimebaseId], 
-    [vEmployeeInfo].[AgencyCode] AS [AgencyCode]
+    [vEmployeeInfo].[Timebase] AS [Timebase]
     FROM [dbo].[vEmployeeInfo] AS [vEmployeeInfo]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="fk_EmployeeEmail_EmployeeId" Association="Self.fk_EmployeeEmail_EmployeeId">
@@ -116,8 +114,7 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
             <End Role="EmployeePhone" EntitySet="EmployeePhone" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CalECRModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -180,7 +177,6 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
           <Property Name="Suffix" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Tenure" Type="String" MaxLength="27" FixedLength="false" Unicode="false" />
           <Property Name="Timebase" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="TenureTimebaseId" Type="Byte" />
           <Property Name="AgencyCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
         </EntityType>
         <Association Name="fk_EmployeeEmail_EmployeeId">
@@ -207,7 +203,7 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="CalECREntities1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="CalECREntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Employee" EntityType="Self.Employee" />
           <EntitySet Name="EmployeeEmail" EntityType="Self.EmployeeEmail" />
           <EntitySet Name="EmployeePhone" EntityType="Self.EmployeePhone" />
@@ -226,7 +222,7 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="CalECRModelStoreContainer" CdmEntityContainer="CalECREntities1">
+        <EntityContainerMapping StorageEntityContainer="CalECRModelStoreContainer" CdmEntityContainer="CalECREntities">
           <EntitySetMapping Name="Employee">
             <EntityTypeMapping TypeName="CalECRModel.Employee">
               <MappingFragment StoreEntitySet="Employee">
@@ -282,7 +278,6 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
                 <ScalarProperty Name="Suffix" ColumnName="Suffix" />
                 <ScalarProperty Name="Tenure" ColumnName="Tenure" />
                 <ScalarProperty Name="Timebase" ColumnName="Timebase" />
-                <ScalarProperty Name="TenureTimebaseId" ColumnName="TenureTimebaseId" />
                 <ScalarProperty Name="AgencyCode" ColumnName="AgencyCode" />
               </MappingFragment>
             </EntityTypeMapping>

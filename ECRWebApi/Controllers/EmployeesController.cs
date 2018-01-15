@@ -14,12 +14,11 @@ namespace ECRWebApi.Controllers
 {
     public class EmployeesController : ApiController
     {
-        private CalECREntities1 db = new CalECREntities1();
+        private CalECREntities db = new CalECREntities();
         private readonly byte RECORDSTATUS = 1;
         private readonly byte HOMEPHONETYPE = 1;
         private readonly byte WORKEMAILTYPE = 2;
         private readonly byte WORKPHONETYPE = 2;
-
 
         // GET: api/Employees
         /// <summary>

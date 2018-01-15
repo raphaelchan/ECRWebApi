@@ -13,10 +13,10 @@ namespace ECRWebApi.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class CalECREntities1 : DbContext
+    public partial class CalECREntities : DbContext
     {
-        public CalECREntities1()
-            : base("name=CalECREntities1")
+        public CalECREntities()
+            : base("name=CalECREntities")
         {
         }
     

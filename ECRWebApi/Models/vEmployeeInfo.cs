@@ -22,7 +22,6 @@ namespace ECRWebApi.Models
         public string Suffix { get; set; }
         public string Tenure { get; set; }
         public string Timebase { get; set; }
-        public Nullable<byte> TenureTimebaseId { get; set; }
         public string AgencyCode { get; set; }
     }
 }
