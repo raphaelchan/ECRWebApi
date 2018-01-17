@@ -27,7 +27,26 @@ namespace ECRWebApi.Models
         {
             return EmployeeContacts.GetEnumerator();
         }
-
+    }
+    public class EmployeePosition
+    {
+        public string Tenure { get; set; }
+        public string Timebase { get; set; }
+        public string SafetyCode { get; set; }
+        public string AgencyCode { get; set; }
+        public string ClassificationTitle { get; set; }
+        public string ClassCode { get; set; }
+    }
+    public class EmployeeInfo
+    {
+        public string UniqueEmployeeId { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string Suffix { get; set; }
+        public string Email { get; set; }
+        public string AgencyCode { get; set; }
+        public  ICollection<EmployeePosition> EmployeePosition { get; set; }
     }
     //public class EmployeeEmailDto
     //{

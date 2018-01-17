@@ -23,5 +23,9 @@ namespace ECRWebApi.Models
         public string Tenure { get; set; }
         public string Timebase { get; set; }
         public string AgencyCode { get; set; }
+        public string ClassCode { get; set; }
+        public string ClassificationTitle { get; set; }
+        public string SafetyCode { get; set; }
+        public string CBIDClassification { get; set; }
     }
 }

@@ -53,16 +53,27 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
             <PropertyRef Name="UniqueEmployeeId" />
             <PropertyRef Name="FirstName" />
             <PropertyRef Name="LastName" />
+            
+            
+            
+            <PropertyRef Name="ClassCode" />
+            <PropertyRef Name="ClassificationTitle" />
+            <PropertyRef Name="SafetyCode" />
+            <PropertyRef Name="CBIDClassification" />
           </Key>
           <Property Name="UniqueEmployeeId" Type="char" MaxLength="11" Nullable="false" />
-          <Property Name="Email" Type="varchar" MaxLength="100" />
           <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="MiddleName" Type="varchar" MaxLength="50" />
           <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Suffix" Type="varchar" MaxLength="20" />
-          <Property Name="AgencyCode" Type="char" MaxLength="3" />
-          <Property Name="Tenure" Type="varchar" MaxLength="27" />
-          <Property Name="Timebase" Type="varchar" MaxLength="15" />
+          <Property Name="Email" Type="varchar" MaxLength="100" />
+          <Property Name="Tenure" Type="varchar" MaxLength="27" Nullable="false" />
+          <Property Name="AgencyCode" Type="char" MaxLength="3" Nullable="false" />
+          <Property Name="Timebase" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="ClassCode" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="ClassificationTitle" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="SafetyCode" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="CBIDClassification" Type="char" MaxLength="4" Nullable="false" />
         </EntityType>
         <Association Name="fk_EmployeeEmail_EmployeeId">
           <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
@@ -95,14 +106,18 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
           <EntitySet Name="vEmployeeInfo" EntityType="Self.vEmployeeInfo" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vEmployeeInfo].[UniqueEmployeeId] AS [UniqueEmployeeId], 
-    [vEmployeeInfo].[Email] AS [Email], 
     [vEmployeeInfo].[FirstName] AS [FirstName], 
     [vEmployeeInfo].[MiddleName] AS [MiddleName], 
     [vEmployeeInfo].[LastName] AS [LastName], 
     [vEmployeeInfo].[Suffix] AS [Suffix], 
-    [vEmployeeInfo].[AgencyCode] AS [AgencyCode], 
+    [vEmployeeInfo].[Email] AS [Email], 
     [vEmployeeInfo].[Tenure] AS [Tenure], 
-    [vEmployeeInfo].[Timebase] AS [Timebase]
+    [vEmployeeInfo].[AgencyCode] AS [AgencyCode], 
+    [vEmployeeInfo].[Timebase] AS [Timebase], 
+    [vEmployeeInfo].[ClassCode] AS [ClassCode], 
+    [vEmployeeInfo].[ClassificationTitle] AS [ClassificationTitle], 
+    [vEmployeeInfo].[SafetyCode] AS [SafetyCode], 
+    [vEmployeeInfo].[CBIDClassification] AS [CBIDClassification]
     FROM [dbo].[vEmployeeInfo] AS [vEmployeeInfo]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="fk_EmployeeEmail_EmployeeId" Association="Self.fk_EmployeeEmail_EmployeeId">
@@ -168,6 +183,10 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
             <PropertyRef Name="UniqueEmployeeId" />
             <PropertyRef Name="FirstName" />
             <PropertyRef Name="LastName" />
+            <PropertyRef Name="ClassCode" />
+            <PropertyRef Name="ClassificationTitle" />
+            <PropertyRef Name="SafetyCode" />
+            <PropertyRef Name="CBIDClassification" />
           </Key>
           <Property Name="UniqueEmployeeId" Type="String" MaxLength="11" FixedLength="true" Unicode="false" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -175,9 +194,13 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
           <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Suffix" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Tenure" Type="String" MaxLength="27" FixedLength="false" Unicode="false" />
-          <Property Name="Timebase" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="AgencyCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="Tenure" Type="String" MaxLength="27" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Timebase" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AgencyCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="ClassCode" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="false" />
+          <Property Name="ClassificationTitle" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="SafetyCode" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="false" />
+          <Property Name="CBIDClassification" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="false" />
         </EntityType>
         <Association Name="fk_EmployeeEmail_EmployeeId">
           <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
@@ -270,6 +293,10 @@ warning 6002: The table/view 'CalECR.dbo.vEmployeeInfo' does not have a primary 
           <EntitySetMapping Name="vEmployeeInfo">
             <EntityTypeMapping TypeName="CalECRModel.vEmployeeInfo">
               <MappingFragment StoreEntitySet="vEmployeeInfo">
+                <ScalarProperty Name="CBIDClassification" ColumnName="CBIDClassification" />
+                <ScalarProperty Name="SafetyCode" ColumnName="SafetyCode" />
+                <ScalarProperty Name="ClassificationTitle" ColumnName="ClassificationTitle" />
+                <ScalarProperty Name="ClassCode" ColumnName="ClassCode" />
                 <ScalarProperty Name="UniqueEmployeeId" ColumnName="UniqueEmployeeId" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />

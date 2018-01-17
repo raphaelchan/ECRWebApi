@@ -30,9 +30,9 @@ namespace ECRWebApi.Controllers
         /// <returns></returns>
         public IQueryable<vEmployeeInfo> GetvEmployeeInfo(string AgencyCode)
         {
-            var employeeInfo = db.vEmployeeInfo
+            var employee = db.vEmployeeInfo
                                .Where(t => t.AgencyCode.Equals(AgencyCode));
-            return (employeeInfo);
+            return employee;
         }
 
         /// <summary>

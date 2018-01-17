@@ -8,7 +8,7 @@
         <EntityTypeShape EntityType="CalECRModel.Employee" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
         <EntityTypeShape EntityType="CalECRModel.EmployeeEmail" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="CalECRModel.EmployeePhone" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="CalECRModel.vEmployeeInfo" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CalECRModel.vEmployeeInfo" Width="1.5" PointX="5" PointY="1.875" IsExpanded="true" />
         <AssociationConnector Association="CalECRModel.fk_EmployeeEmail_EmployeeId" ManuallyRouted="false" />
         <AssociationConnector Association="CalECRModel.fk_EmployeePhone_EmployeeId" ManuallyRouted="false" />
       </Diagram>
